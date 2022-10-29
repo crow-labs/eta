@@ -1,8 +1,10 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { Member } from "./member";
 import { Params } from "./params";
+import { Whitelist } from "./whitelist";
 
 export const protobufPackage = "crowlabs.eta.whitelist";
 
@@ -30,6 +32,23 @@ export interface QueryAllMemberRequest {
 
 export interface QueryAllMemberResponse {
   member: Member[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetWhitelistRequest {
+  whitelistId: number;
+}
+
+export interface QueryGetWhitelistResponse {
+  whitelist: Whitelist | undefined;
+}
+
+export interface QueryAllWhitelistRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllWhitelistResponse {
+  whitelist: Whitelist[];
   pagination: PageResponse | undefined;
 }
 
@@ -332,6 +351,218 @@ export const QueryAllMemberResponse = {
   },
 };
 
+function createBaseQueryGetWhitelistRequest(): QueryGetWhitelistRequest {
+  return { whitelistId: 0 };
+}
+
+export const QueryGetWhitelistRequest = {
+  encode(message: QueryGetWhitelistRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.whitelistId !== 0) {
+      writer.uint32(8).uint64(message.whitelistId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetWhitelistRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetWhitelistRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.whitelistId = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetWhitelistRequest {
+    return { whitelistId: isSet(object.whitelistId) ? Number(object.whitelistId) : 0 };
+  },
+
+  toJSON(message: QueryGetWhitelistRequest): unknown {
+    const obj: any = {};
+    message.whitelistId !== undefined && (obj.whitelistId = Math.round(message.whitelistId));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetWhitelistRequest>, I>>(object: I): QueryGetWhitelistRequest {
+    const message = createBaseQueryGetWhitelistRequest();
+    message.whitelistId = object.whitelistId ?? 0;
+    return message;
+  },
+};
+
+function createBaseQueryGetWhitelistResponse(): QueryGetWhitelistResponse {
+  return { whitelist: undefined };
+}
+
+export const QueryGetWhitelistResponse = {
+  encode(message: QueryGetWhitelistResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.whitelist !== undefined) {
+      Whitelist.encode(message.whitelist, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetWhitelistResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetWhitelistResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.whitelist = Whitelist.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetWhitelistResponse {
+    return { whitelist: isSet(object.whitelist) ? Whitelist.fromJSON(object.whitelist) : undefined };
+  },
+
+  toJSON(message: QueryGetWhitelistResponse): unknown {
+    const obj: any = {};
+    message.whitelist !== undefined
+      && (obj.whitelist = message.whitelist ? Whitelist.toJSON(message.whitelist) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetWhitelistResponse>, I>>(object: I): QueryGetWhitelistResponse {
+    const message = createBaseQueryGetWhitelistResponse();
+    message.whitelist = (object.whitelist !== undefined && object.whitelist !== null)
+      ? Whitelist.fromPartial(object.whitelist)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllWhitelistRequest(): QueryAllWhitelistRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllWhitelistRequest = {
+  encode(message: QueryAllWhitelistRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllWhitelistRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllWhitelistRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllWhitelistRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllWhitelistRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllWhitelistRequest>, I>>(object: I): QueryAllWhitelistRequest {
+    const message = createBaseQueryAllWhitelistRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllWhitelistResponse(): QueryAllWhitelistResponse {
+  return { whitelist: [], pagination: undefined };
+}
+
+export const QueryAllWhitelistResponse = {
+  encode(message: QueryAllWhitelistResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.whitelist) {
+      Whitelist.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllWhitelistResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllWhitelistResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.whitelist.push(Whitelist.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllWhitelistResponse {
+    return {
+      whitelist: Array.isArray(object?.whitelist) ? object.whitelist.map((e: any) => Whitelist.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllWhitelistResponse): unknown {
+    const obj: any = {};
+    if (message.whitelist) {
+      obj.whitelist = message.whitelist.map((e) => e ? Whitelist.toJSON(e) : undefined);
+    } else {
+      obj.whitelist = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllWhitelistResponse>, I>>(object: I): QueryAllWhitelistResponse {
+    const message = createBaseQueryAllWhitelistResponse();
+    message.whitelist = object.whitelist?.map((e) => Whitelist.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -340,6 +571,10 @@ export interface Query {
   Member(request: QueryGetMemberRequest): Promise<QueryGetMemberResponse>;
   /** Queries a list of Member items. */
   MemberAll(request: QueryAllMemberRequest): Promise<QueryAllMemberResponse>;
+  /** Queries a Whitelist by index. */
+  Whitelist(request: QueryGetWhitelistRequest): Promise<QueryGetWhitelistResponse>;
+  /** Queries a list of Whitelist items. */
+  WhitelistAll(request: QueryAllWhitelistRequest): Promise<QueryAllWhitelistResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -349,6 +584,8 @@ export class QueryClientImpl implements Query {
     this.Params = this.Params.bind(this);
     this.Member = this.Member.bind(this);
     this.MemberAll = this.MemberAll.bind(this);
+    this.Whitelist = this.Whitelist.bind(this);
+    this.WhitelistAll = this.WhitelistAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -367,11 +604,42 @@ export class QueryClientImpl implements Query {
     const promise = this.rpc.request("crowlabs.eta.whitelist.Query", "MemberAll", data);
     return promise.then((data) => QueryAllMemberResponse.decode(new _m0.Reader(data)));
   }
+
+  Whitelist(request: QueryGetWhitelistRequest): Promise<QueryGetWhitelistResponse> {
+    const data = QueryGetWhitelistRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.whitelist.Query", "Whitelist", data);
+    return promise.then((data) => QueryGetWhitelistResponse.decode(new _m0.Reader(data)));
+  }
+
+  WhitelistAll(request: QueryAllWhitelistRequest): Promise<QueryAllWhitelistResponse> {
+    const data = QueryAllWhitelistRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.whitelist.Query", "WhitelistAll", data);
+    return promise.then((data) => QueryAllWhitelistResponse.decode(new _m0.Reader(data)));
+  }
 }
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -383,6 +651,18 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

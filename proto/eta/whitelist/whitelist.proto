@@ -1,0 +1,12 @@
+syntax = "proto3";
+package crowlabs.eta.whitelist;
+
+option go_package = "github.com/crow-labs/eta/x/whitelist/types";
+import "eta/whitelist/member.proto"; 
+
+message Whitelist {
+  uint64 whitelistId = 1; 
+  Member members = 2; 
+  
+}
+

@@ -5,8 +5,9 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "eta/whitelist/params.proto";
-import "eta/whitelist/member.proto";
+import "eta/whitelist/whitelist.proto";
 // this line is used by starport scaffolding # 1
+import "eta/whitelist/member.proto";
 
 option go_package = "github.com/crow-labs/eta/x/whitelist/types";
 
@@ -24,6 +25,16 @@ service Query {
 	// Queries a list of Member items.
 	rpc MemberAll(QueryAllMemberRequest) returns (QueryAllMemberResponse) {
 		option (google.api.http).get = "/crow-labs/eta/whitelist/member";
+	}
+
+// Queries a Whitelist by index.
+	rpc Whitelist(QueryGetWhitelistRequest) returns (QueryGetWhitelistResponse) {
+		option (google.api.http).get = "/crow-labs/eta/whitelist/whitelist/{whitelistId}";
+	}
+
+	// Queries a list of Whitelist items.
+	rpc WhitelistAll(QueryAllWhitelistRequest) returns (QueryAllWhitelistResponse) {
+		option (google.api.http).get = "/crow-labs/eta/whitelist/whitelist";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -53,6 +64,24 @@ message QueryAllMemberRequest {
 
 message QueryAllMemberResponse {
 	repeated Member member = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetWhitelistRequest {
+	  uint64 whitelistId = 1;
+
+}
+
+message QueryGetWhitelistResponse {
+	Whitelist whitelist = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllWhitelistRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllWhitelistResponse {
+	repeated Whitelist whitelist = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

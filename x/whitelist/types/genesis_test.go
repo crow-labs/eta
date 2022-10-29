@@ -30,6 +30,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Addresss: "1",
 					},
 				},
+				WhitelistList: []types.Whitelist{
+					{
+						WhitelistId: 0,
+					},
+					{
+						WhitelistId: 1,
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -43,6 +51,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						Addresss: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated whitelist",
+			genState: &types.GenesisState{
+				WhitelistList: []types.Whitelist{
+					{
+						WhitelistId: 0,
+					},
+					{
+						WhitelistId: 0,
 					},
 				},
 			},

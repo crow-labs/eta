@@ -125,8 +125,27 @@ export interface WhitelistQueryAllMemberResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface WhitelistQueryAllWhitelistResponse {
+  whitelist?: WhitelistWhitelist[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface WhitelistQueryGetMemberResponse {
   member?: WhitelistMember;
+}
+
+export interface WhitelistQueryGetWhitelistResponse {
+  whitelist?: WhitelistWhitelist;
 }
 
 /**
@@ -135,6 +154,12 @@ export interface WhitelistQueryGetMemberResponse {
 export interface WhitelistQueryParamsResponse {
   /** Params defines the parameters for the module. */
   params?: WhitelistParams;
+}
+
+export interface WhitelistWhitelist {
+  /** @format uint64 */
+  whitelistId?: string;
+  members?: WhitelistMember;
 }
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from "axios";
@@ -315,6 +340,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<WhitelistQueryParamsResponse, RpcStatus>({
       path: `/crow-labs/eta/whitelist/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryWhitelistAll
+   * @summary Queries a list of Whitelist items.
+   * @request GET:/crow-labs/eta/whitelist/whitelist
+   */
+  queryWhitelistAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<WhitelistQueryAllWhitelistResponse, RpcStatus>({
+      path: `/crow-labs/eta/whitelist/whitelist`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryWhitelist
+   * @summary Queries a Whitelist by index.
+   * @request GET:/crow-labs/eta/whitelist/whitelist/{whitelistId}
+   */
+  queryWhitelist = (whitelistId: string, params: RequestParams = {}) =>
+    this.request<WhitelistQueryGetWhitelistResponse, RpcStatus>({
+      path: `/crow-labs/eta/whitelist/whitelist/${whitelistId}`,
       method: "GET",
       format: "json",
       ...params,

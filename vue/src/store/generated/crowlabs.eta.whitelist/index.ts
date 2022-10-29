@@ -2,9 +2,10 @@ import { Client, registry, MissingWalletError } from 'crow-labs-eta-client-ts'
 
 import { Member } from "crow-labs-eta-client-ts/crowlabs.eta.whitelist/types"
 import { Params } from "crow-labs-eta-client-ts/crowlabs.eta.whitelist/types"
+import { Whitelist } from "crow-labs-eta-client-ts/crowlabs.eta.whitelist/types"
 
 
-export { Member, Params };
+export { Member, Params, Whitelist };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -38,10 +39,13 @@ const getDefaultState = () => {
 				Params: {},
 				Member: {},
 				MemberAll: {},
+				Whitelist: {},
+				WhitelistAll: {},
 				
 				_Structure: {
 						Member: getStructure(Member.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						Whitelist: getStructure(Whitelist.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -87,6 +91,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.MemberAll[JSON.stringify(params)] ?? {}
+		},
+				getWhitelist: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Whitelist[JSON.stringify(params)] ?? {}
+		},
+				getWhitelistAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.WhitelistAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -187,6 +203,54 @@ export default {
 				return getters['getMemberAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryMemberAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryWhitelist({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaWhitelist.query.queryWhitelist( key.whitelistId)).data
+				
+					
+				commit('QUERY', { query: 'Whitelist', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryWhitelist', payload: { options: { all }, params: {...key},query }})
+				return getters['getWhitelist']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryWhitelist API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryWhitelistAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaWhitelist.query.queryWhitelistAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.CrowlabsEtaWhitelist.query.queryWhitelistAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'WhitelistAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryWhitelistAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getWhitelistAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryWhitelistAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

@@ -22,6 +22,14 @@ func TestGenesis(t *testing.T) {
 				Addresss: "1",
 			},
 		},
+		WhitelistList: []types.Whitelist{
+			{
+				WhitelistId: 0,
+			},
+			{
+				WhitelistId: 1,
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -34,5 +42,6 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.MemberList, got.MemberList)
+	require.ElementsMatch(t, genesisState.WhitelistList, got.WhitelistList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

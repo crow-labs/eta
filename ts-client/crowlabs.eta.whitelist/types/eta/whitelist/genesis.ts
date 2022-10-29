@@ -2,20 +2,20 @@
 import _m0 from "protobufjs/minimal";
 import { Member } from "./member";
 import { Params } from "./params";
+import { Whitelist } from "./whitelist";
 
 export const protobufPackage = "crowlabs.eta.whitelist";
 
 /** GenesisState defines the whitelist module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   memberList: Member[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  whitelistList: Whitelist[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, memberList: [] };
+  return { params: undefined, memberList: [], whitelistList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +25,9 @@ export const GenesisState = {
     }
     for (const v of message.memberList) {
       Member.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.whitelistList) {
+      Whitelist.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +45,9 @@ export const GenesisState = {
         case 2:
           message.memberList.push(Member.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.whitelistList.push(Whitelist.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -54,6 +60,9 @@ export const GenesisState = {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
       memberList: Array.isArray(object?.memberList) ? object.memberList.map((e: any) => Member.fromJSON(e)) : [],
+      whitelistList: Array.isArray(object?.whitelistList)
+        ? object.whitelistList.map((e: any) => Whitelist.fromJSON(e))
+        : [],
     };
   },
 
@@ -65,6 +74,11 @@ export const GenesisState = {
     } else {
       obj.memberList = [];
     }
+    if (message.whitelistList) {
+      obj.whitelistList = message.whitelistList.map((e) => e ? Whitelist.toJSON(e) : undefined);
+    } else {
+      obj.whitelistList = [];
+    }
     return obj;
   },
 
@@ -74,6 +88,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.memberList = object.memberList?.map((e) => Member.fromPartial(e)) || [];
+    message.whitelistList = object.whitelistList?.map((e) => Whitelist.fromPartial(e)) || [];
     return message;
   },
 };
