@@ -4,6 +4,7 @@ package crowlabs.eta.escrow;
 import "gogoproto/gogo.proto";
 import "eta/escrow/params.proto";
 import "eta/escrow/crow.proto";
+import "eta/escrow/dispute.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/crow-labs/eta/x/escrow/types";
@@ -12,5 +13,6 @@ option go_package = "github.com/crow-labs/eta/x/escrow/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   repeated Crow crowList = 2 [(gogoproto.nullable) = false];
+  repeated Dispute disputeList = 3 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

@@ -1,21 +1,21 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { Crow } from "./crow";
+import { Dispute } from "./dispute";
 import { Params } from "./params";
 
 export const protobufPackage = "crowlabs.eta.escrow";
 
 /** GenesisState defines the escrow module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   crowList: Crow[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  disputeList: Dispute[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, crowList: [] };
+  return { params: undefined, crowList: [], disputeList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +25,9 @@ export const GenesisState = {
     }
     for (const v of message.crowList) {
       Crow.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.disputeList) {
+      Dispute.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +45,9 @@ export const GenesisState = {
         case 2:
           message.crowList.push(Crow.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.disputeList.push(Dispute.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -54,6 +60,7 @@ export const GenesisState = {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
       crowList: Array.isArray(object?.crowList) ? object.crowList.map((e: any) => Crow.fromJSON(e)) : [],
+      disputeList: Array.isArray(object?.disputeList) ? object.disputeList.map((e: any) => Dispute.fromJSON(e)) : [],
     };
   },
 
@@ -65,6 +72,11 @@ export const GenesisState = {
     } else {
       obj.crowList = [];
     }
+    if (message.disputeList) {
+      obj.disputeList = message.disputeList.map((e) => e ? Dispute.toJSON(e) : undefined);
+    } else {
+      obj.disputeList = [];
+    }
     return obj;
   },
 
@@ -74,6 +86,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.crowList = object.crowList?.map((e) => Crow.fromPartial(e)) || [];
+    message.disputeList = object.disputeList?.map((e) => Dispute.fromPartial(e)) || [];
     return message;
   },
 };

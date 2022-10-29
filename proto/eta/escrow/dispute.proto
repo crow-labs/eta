@@ -1,0 +1,16 @@
+syntax = "proto3";
+package crowlabs.eta.escrow;
+
+option go_package = "github.com/crow-labs/eta/x/escrow/types";
+import "eta/escrow/buyer_evidence.proto"; 
+import "eta/escrow/seller_evidence.proto"; 
+
+message Dispute {
+  uint64 disputeId = 1; 
+  uint64 crowId = 2; 
+  uint64 creatorId = 3; 
+  BuyerEvidence buyerEvidence = 4; 
+  SellerEvidence sellerEvidence = 5; 
+  
+}
+

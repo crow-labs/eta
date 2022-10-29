@@ -3,6 +3,7 @@ import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { Crow } from "./crow";
+import { Dispute } from "./dispute";
 import { Params } from "./params";
 
 export const protobufPackage = "crowlabs.eta.escrow";
@@ -31,6 +32,23 @@ export interface QueryAllCrowRequest {
 
 export interface QueryAllCrowResponse {
   crow: Crow[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetDisputeRequest {
+  disputeId: number;
+}
+
+export interface QueryGetDisputeResponse {
+  dispute: Dispute | undefined;
+}
+
+export interface QueryAllDisputeRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllDisputeResponse {
+  dispute: Dispute[];
   pagination: PageResponse | undefined;
 }
 
@@ -331,6 +349,217 @@ export const QueryAllCrowResponse = {
   },
 };
 
+function createBaseQueryGetDisputeRequest(): QueryGetDisputeRequest {
+  return { disputeId: 0 };
+}
+
+export const QueryGetDisputeRequest = {
+  encode(message: QueryGetDisputeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.disputeId !== 0) {
+      writer.uint32(8).uint64(message.disputeId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetDisputeRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetDisputeRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.disputeId = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDisputeRequest {
+    return { disputeId: isSet(object.disputeId) ? Number(object.disputeId) : 0 };
+  },
+
+  toJSON(message: QueryGetDisputeRequest): unknown {
+    const obj: any = {};
+    message.disputeId !== undefined && (obj.disputeId = Math.round(message.disputeId));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetDisputeRequest>, I>>(object: I): QueryGetDisputeRequest {
+    const message = createBaseQueryGetDisputeRequest();
+    message.disputeId = object.disputeId ?? 0;
+    return message;
+  },
+};
+
+function createBaseQueryGetDisputeResponse(): QueryGetDisputeResponse {
+  return { dispute: undefined };
+}
+
+export const QueryGetDisputeResponse = {
+  encode(message: QueryGetDisputeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.dispute !== undefined) {
+      Dispute.encode(message.dispute, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetDisputeResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetDisputeResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.dispute = Dispute.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDisputeResponse {
+    return { dispute: isSet(object.dispute) ? Dispute.fromJSON(object.dispute) : undefined };
+  },
+
+  toJSON(message: QueryGetDisputeResponse): unknown {
+    const obj: any = {};
+    message.dispute !== undefined && (obj.dispute = message.dispute ? Dispute.toJSON(message.dispute) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetDisputeResponse>, I>>(object: I): QueryGetDisputeResponse {
+    const message = createBaseQueryGetDisputeResponse();
+    message.dispute = (object.dispute !== undefined && object.dispute !== null)
+      ? Dispute.fromPartial(object.dispute)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllDisputeRequest(): QueryAllDisputeRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllDisputeRequest = {
+  encode(message: QueryAllDisputeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllDisputeRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDisputeRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDisputeRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllDisputeRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllDisputeRequest>, I>>(object: I): QueryAllDisputeRequest {
+    const message = createBaseQueryAllDisputeRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllDisputeResponse(): QueryAllDisputeResponse {
+  return { dispute: [], pagination: undefined };
+}
+
+export const QueryAllDisputeResponse = {
+  encode(message: QueryAllDisputeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.dispute) {
+      Dispute.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllDisputeResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDisputeResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.dispute.push(Dispute.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDisputeResponse {
+    return {
+      dispute: Array.isArray(object?.dispute) ? object.dispute.map((e: any) => Dispute.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllDisputeResponse): unknown {
+    const obj: any = {};
+    if (message.dispute) {
+      obj.dispute = message.dispute.map((e) => e ? Dispute.toJSON(e) : undefined);
+    } else {
+      obj.dispute = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllDisputeResponse>, I>>(object: I): QueryAllDisputeResponse {
+    const message = createBaseQueryAllDisputeResponse();
+    message.dispute = object.dispute?.map((e) => Dispute.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -339,6 +568,10 @@ export interface Query {
   Crow(request: QueryGetCrowRequest): Promise<QueryGetCrowResponse>;
   /** Queries a list of Crow items. */
   CrowAll(request: QueryAllCrowRequest): Promise<QueryAllCrowResponse>;
+  /** Queries a Dispute by index. */
+  Dispute(request: QueryGetDisputeRequest): Promise<QueryGetDisputeResponse>;
+  /** Queries a list of Dispute items. */
+  DisputeAll(request: QueryAllDisputeRequest): Promise<QueryAllDisputeResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -348,6 +581,8 @@ export class QueryClientImpl implements Query {
     this.Params = this.Params.bind(this);
     this.Crow = this.Crow.bind(this);
     this.CrowAll = this.CrowAll.bind(this);
+    this.Dispute = this.Dispute.bind(this);
+    this.DisputeAll = this.DisputeAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -365,6 +600,18 @@ export class QueryClientImpl implements Query {
     const data = QueryAllCrowRequest.encode(request).finish();
     const promise = this.rpc.request("crowlabs.eta.escrow.Query", "CrowAll", data);
     return promise.then((data) => QueryAllCrowResponse.decode(new _m0.Reader(data)));
+  }
+
+  Dispute(request: QueryGetDisputeRequest): Promise<QueryGetDisputeResponse> {
+    const data = QueryGetDisputeRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.escrow.Query", "Dispute", data);
+    return promise.then((data) => QueryGetDisputeResponse.decode(new _m0.Reader(data)));
+  }
+
+  DisputeAll(request: QueryAllDisputeRequest): Promise<QueryAllDisputeResponse> {
+    const data = QueryAllDisputeRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.escrow.Query", "DisputeAll", data);
+    return promise.then((data) => QueryAllDisputeResponse.decode(new _m0.Reader(data)));
   }
 }
 

@@ -2,11 +2,12 @@ import { Client, registry, MissingWalletError } from 'crow-labs-eta-client-ts'
 
 import { BuyerEvidence } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
 import { Crow } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
+import { Dispute } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
 import { Params } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
 import { SellerEvidence } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
 
 
-export { BuyerEvidence, Crow, Params, SellerEvidence };
+export { BuyerEvidence, Crow, Dispute, Params, SellerEvidence };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -40,10 +41,13 @@ const getDefaultState = () => {
 				Params: {},
 				Crow: {},
 				CrowAll: {},
+				Dispute: {},
+				DisputeAll: {},
 				
 				_Structure: {
 						BuyerEvidence: getStructure(BuyerEvidence.fromPartial({})),
 						Crow: getStructure(Crow.fromPartial({})),
+						Dispute: getStructure(Dispute.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						SellerEvidence: getStructure(SellerEvidence.fromPartial({})),
 						
@@ -91,6 +95,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.CrowAll[JSON.stringify(params)] ?? {}
+		},
+				getDispute: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Dispute[JSON.stringify(params)] ?? {}
+		},
+				getDisputeAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.DisputeAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -191,6 +207,54 @@ export default {
 				return getters['getCrowAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryCrowAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryDispute({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaEscrow.query.queryDispute( key.disputeId)).data
+				
+					
+				commit('QUERY', { query: 'Dispute', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDispute', payload: { options: { all }, params: {...key},query }})
+				return getters['getDispute']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryDispute API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryDisputeAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaEscrow.query.queryDisputeAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.CrowlabsEtaEscrow.query.queryDisputeAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'DisputeAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDisputeAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getDisputeAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryDisputeAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

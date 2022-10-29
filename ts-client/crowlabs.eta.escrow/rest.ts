@@ -9,6 +9,12 @@
  * ---------------------------------------------------------------
  */
 
+export interface EscrowBuyerEvidence {
+  title?: string;
+  description?: string;
+  externalLinks?: string[];
+}
+
 export interface EscrowCrow {
   /** @format uint64 */
   crowId?: string;
@@ -48,6 +54,19 @@ export interface EscrowCrow {
   disputeIds?: string[];
 }
 
+export interface EscrowDispute {
+  /** @format uint64 */
+  disputeId?: string;
+
+  /** @format uint64 */
+  crowId?: string;
+
+  /** @format uint64 */
+  creatorId?: string;
+  buyerEvidence?: EscrowBuyerEvidence;
+  sellerEvidence?: EscrowSellerEvidence;
+}
+
 /**
  * Params defines the parameters for the module.
  */
@@ -68,8 +87,27 @@ export interface EscrowQueryAllCrowResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface EscrowQueryAllDisputeResponse {
+  dispute?: EscrowDispute[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface EscrowQueryGetCrowResponse {
   crow?: EscrowCrow;
+}
+
+export interface EscrowQueryGetDisputeResponse {
+  dispute?: EscrowDispute;
 }
 
 /**
@@ -78,6 +116,12 @@ export interface EscrowQueryGetCrowResponse {
 export interface EscrowQueryParamsResponse {
   /** Params defines the parameters for the module. */
   params?: EscrowParams;
+}
+
+export interface EscrowSellerEvidence {
+  title?: string;
+  description?: string;
+  externalLinks?: string[];
 }
 
 export interface ProtobufAny {
@@ -336,6 +380,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryCrow = (crowId: string, params: RequestParams = {}) =>
     this.request<EscrowQueryGetCrowResponse, RpcStatus>({
       path: `/crow-labs/eta/escrow/crow/${crowId}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDisputeAll
+   * @summary Queries a list of Dispute items.
+   * @request GET:/crow-labs/eta/escrow/dispute
+   */
+  queryDisputeAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<EscrowQueryAllDisputeResponse, RpcStatus>({
+      path: `/crow-labs/eta/escrow/dispute`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDispute
+   * @summary Queries a Dispute by index.
+   * @request GET:/crow-labs/eta/escrow/dispute/{disputeId}
+   */
+  queryDispute = (disputeId: string, params: RequestParams = {}) =>
+    this.request<EscrowQueryGetDisputeResponse, RpcStatus>({
+      path: `/crow-labs/eta/escrow/dispute/${disputeId}`,
       method: "GET",
       format: "json",
       ...params,
