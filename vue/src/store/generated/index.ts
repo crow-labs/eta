@@ -1,11 +1,13 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import CrowlabsEtaBooth from './crowlabs.eta.booth'
 import CrowlabsEtaEscrow from './crowlabs.eta.escrow'
 import CrowlabsEtaMarket from './crowlabs.eta.market'
 import CrowlabsEtaWhitelist from './crowlabs.eta.whitelist'
 
 
 export default { 
+  CrowlabsEtaBooth: load(CrowlabsEtaBooth, 'crowlabs.eta.booth'),
   CrowlabsEtaEscrow: load(CrowlabsEtaEscrow, 'crowlabs.eta.escrow'),
   CrowlabsEtaMarket: load(CrowlabsEtaMarket, 'crowlabs.eta.market'),
   CrowlabsEtaWhitelist: load(CrowlabsEtaWhitelist, 'crowlabs.eta.whitelist'),

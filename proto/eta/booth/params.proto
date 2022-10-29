@@ -1,0 +1,12 @@
+syntax = "proto3";
+package crowlabs.eta.booth;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/crow-labs/eta/x/booth/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

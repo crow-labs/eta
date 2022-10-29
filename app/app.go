@@ -104,6 +104,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	boothmodule "github.com/crow-labs/eta/x/booth"
+	boothmodulekeeper "github.com/crow-labs/eta/x/booth/keeper"
+	boothmoduletypes "github.com/crow-labs/eta/x/booth/types"
 	escrowmodule "github.com/crow-labs/eta/x/escrow"
 	escrowmodulekeeper "github.com/crow-labs/eta/x/escrow/keeper"
 	escrowmoduletypes "github.com/crow-labs/eta/x/escrow/types"
@@ -174,6 +177,7 @@ var (
 		whitelistmodule.AppModuleBasic{},
 		marketmodule.AppModuleBasic{},
 		escrowmodule.AppModuleBasic{},
+		boothmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -190,6 +194,7 @@ var (
 		whitelistmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		marketmoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		escrowmoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		boothmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -255,6 +260,8 @@ type App struct {
 	MarketKeeper marketmodulekeeper.Keeper
 
 	EscrowKeeper escrowmodulekeeper.Keeper
+
+	BoothKeeper boothmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -302,6 +309,7 @@ func New(
 		whitelistmoduletypes.StoreKey,
 		marketmoduletypes.StoreKey,
 		escrowmoduletypes.StoreKey,
+		boothmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -555,6 +563,19 @@ func New(
 	)
 	escrowModule := escrowmodule.NewAppModule(appCodec, app.EscrowKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.BoothKeeper = *boothmodulekeeper.NewKeeper(
+		appCodec,
+		keys[boothmoduletypes.StoreKey],
+		keys[boothmoduletypes.MemStoreKey],
+		app.GetSubspace(boothmoduletypes.ModuleName),
+
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.WhitelistKeeper,
+		app.EscrowKeeper,
+	)
+	boothModule := boothmodule.NewAppModule(appCodec, app.BoothKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Sealing prevents other modules from creating scoped sub-keepers
@@ -603,6 +624,7 @@ func New(
 		whitelistModule,
 		marketModule,
 		escrowModule,
+		boothModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -635,6 +657,7 @@ func New(
 		whitelistmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		escrowmoduletypes.ModuleName,
+		boothmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -662,6 +685,7 @@ func New(
 		whitelistmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		escrowmoduletypes.ModuleName,
+		boothmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -694,6 +718,7 @@ func New(
 		whitelistmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		escrowmoduletypes.ModuleName,
+		boothmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -726,6 +751,7 @@ func New(
 		whitelistModule,
 		marketModule,
 		escrowModule,
+		boothModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -927,6 +953,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(whitelistmoduletypes.ModuleName)
 	paramsKeeper.Subspace(marketmoduletypes.ModuleName)
 	paramsKeeper.Subspace(escrowmoduletypes.ModuleName)
+	paramsKeeper.Subspace(boothmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
