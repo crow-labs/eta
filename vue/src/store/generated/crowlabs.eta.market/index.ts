@@ -2,10 +2,11 @@ import { Client, registry, MissingWalletError } from 'crow-labs-eta-client-ts'
 
 import { Item } from "crow-labs-eta-client-ts/crowlabs.eta.market/types"
 import { Listing } from "crow-labs-eta-client-ts/crowlabs.eta.market/types"
+import { Order } from "crow-labs-eta-client-ts/crowlabs.eta.market/types"
 import { Params } from "crow-labs-eta-client-ts/crowlabs.eta.market/types"
 
 
-export { Item, Listing, Params };
+export { Item, Listing, Order, Params };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -41,10 +42,13 @@ const getDefaultState = () => {
 				ItemAll: {},
 				Listing: {},
 				ListingAll: {},
+				Order: {},
+				OrderAll: {},
 				
 				_Structure: {
 						Item: getStructure(Item.fromPartial({})),
 						Listing: getStructure(Listing.fromPartial({})),
+						Order: getStructure(Order.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
 		},
@@ -103,6 +107,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.ListingAll[JSON.stringify(params)] ?? {}
+		},
+				getOrder: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Order[JSON.stringify(params)] ?? {}
+		},
+				getOrderAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.OrderAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -251,6 +267,54 @@ export default {
 				return getters['getListingAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryListingAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryOrder({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaMarket.query.queryOrder( key.orderId)).data
+				
+					
+				commit('QUERY', { query: 'Order', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryOrder', payload: { options: { all }, params: {...key},query }})
+				return getters['getOrder']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryOrder API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryOrderAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaMarket.query.queryOrderAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.CrowlabsEtaMarket.query.queryOrderAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'OrderAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryOrderAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getOrderAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryOrderAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

@@ -2,6 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { Item } from "./item";
 import { Listing } from "./listing";
+import { Order } from "./order";
 import { Params } from "./params";
 
 export const protobufPackage = "crowlabs.eta.market";
@@ -10,12 +11,13 @@ export const protobufPackage = "crowlabs.eta.market";
 export interface GenesisState {
   params: Params | undefined;
   itemList: Item[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   listingList: Listing[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  orderList: Order[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, itemList: [], listingList: [] };
+  return { params: undefined, itemList: [], listingList: [], orderList: [] };
 }
 
 export const GenesisState = {
@@ -28,6 +30,9 @@ export const GenesisState = {
     }
     for (const v of message.listingList) {
       Listing.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.orderList) {
+      Order.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -48,6 +53,9 @@ export const GenesisState = {
         case 3:
           message.listingList.push(Listing.decode(reader, reader.uint32()));
           break;
+        case 4:
+          message.orderList.push(Order.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -61,6 +69,7 @@ export const GenesisState = {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
       itemList: Array.isArray(object?.itemList) ? object.itemList.map((e: any) => Item.fromJSON(e)) : [],
       listingList: Array.isArray(object?.listingList) ? object.listingList.map((e: any) => Listing.fromJSON(e)) : [],
+      orderList: Array.isArray(object?.orderList) ? object.orderList.map((e: any) => Order.fromJSON(e)) : [],
     };
   },
 
@@ -77,6 +86,11 @@ export const GenesisState = {
     } else {
       obj.listingList = [];
     }
+    if (message.orderList) {
+      obj.orderList = message.orderList.map((e) => e ? Order.toJSON(e) : undefined);
+    } else {
+      obj.orderList = [];
+    }
     return obj;
   },
 
@@ -87,6 +101,7 @@ export const GenesisState = {
       : undefined;
     message.itemList = object.itemList?.map((e) => Item.fromPartial(e)) || [];
     message.listingList = object.listingList?.map((e) => Listing.fromPartial(e)) || [];
+    message.orderList = object.orderList?.map((e) => Order.fromPartial(e)) || [];
     return message;
   },
 };

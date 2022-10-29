@@ -4,6 +4,7 @@ import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { Item } from "./item";
 import { Listing } from "./listing";
+import { Order } from "./order";
 import { Params } from "./params";
 
 export const protobufPackage = "crowlabs.eta.market";
@@ -49,6 +50,23 @@ export interface QueryAllListingRequest {
 
 export interface QueryAllListingResponse {
   listing: Listing[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetOrderRequest {
+  orderId: number;
+}
+
+export interface QueryGetOrderResponse {
+  order: Order | undefined;
+}
+
+export interface QueryAllOrderRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllOrderResponse {
+  order: Order[];
   pagination: PageResponse | undefined;
 }
 
@@ -560,6 +578,215 @@ export const QueryAllListingResponse = {
   },
 };
 
+function createBaseQueryGetOrderRequest(): QueryGetOrderRequest {
+  return { orderId: 0 };
+}
+
+export const QueryGetOrderRequest = {
+  encode(message: QueryGetOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orderId !== 0) {
+      writer.uint32(8).uint64(message.orderId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetOrderRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.orderId = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetOrderRequest {
+    return { orderId: isSet(object.orderId) ? Number(object.orderId) : 0 };
+  },
+
+  toJSON(message: QueryGetOrderRequest): unknown {
+    const obj: any = {};
+    message.orderId !== undefined && (obj.orderId = Math.round(message.orderId));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetOrderRequest>, I>>(object: I): QueryGetOrderRequest {
+    const message = createBaseQueryGetOrderRequest();
+    message.orderId = object.orderId ?? 0;
+    return message;
+  },
+};
+
+function createBaseQueryGetOrderResponse(): QueryGetOrderResponse {
+  return { order: undefined };
+}
+
+export const QueryGetOrderResponse = {
+  encode(message: QueryGetOrderResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.order !== undefined) {
+      Order.encode(message.order, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetOrderResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetOrderResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.order = Order.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetOrderResponse {
+    return { order: isSet(object.order) ? Order.fromJSON(object.order) : undefined };
+  },
+
+  toJSON(message: QueryGetOrderResponse): unknown {
+    const obj: any = {};
+    message.order !== undefined && (obj.order = message.order ? Order.toJSON(message.order) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetOrderResponse>, I>>(object: I): QueryGetOrderResponse {
+    const message = createBaseQueryGetOrderResponse();
+    message.order = (object.order !== undefined && object.order !== null) ? Order.fromPartial(object.order) : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllOrderRequest(): QueryAllOrderRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllOrderRequest = {
+  encode(message: QueryAllOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllOrderRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllOrderRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllOrderRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllOrderRequest>, I>>(object: I): QueryAllOrderRequest {
+    const message = createBaseQueryAllOrderRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllOrderResponse(): QueryAllOrderResponse {
+  return { order: [], pagination: undefined };
+}
+
+export const QueryAllOrderResponse = {
+  encode(message: QueryAllOrderResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.order) {
+      Order.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllOrderResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllOrderResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.order.push(Order.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllOrderResponse {
+    return {
+      order: Array.isArray(object?.order) ? object.order.map((e: any) => Order.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllOrderResponse): unknown {
+    const obj: any = {};
+    if (message.order) {
+      obj.order = message.order.map((e) => e ? Order.toJSON(e) : undefined);
+    } else {
+      obj.order = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllOrderResponse>, I>>(object: I): QueryAllOrderResponse {
+    const message = createBaseQueryAllOrderResponse();
+    message.order = object.order?.map((e) => Order.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -572,6 +799,10 @@ export interface Query {
   Listing(request: QueryGetListingRequest): Promise<QueryGetListingResponse>;
   /** Queries a list of Listing items. */
   ListingAll(request: QueryAllListingRequest): Promise<QueryAllListingResponse>;
+  /** Queries a Order by index. */
+  Order(request: QueryGetOrderRequest): Promise<QueryGetOrderResponse>;
+  /** Queries a list of Order items. */
+  OrderAll(request: QueryAllOrderRequest): Promise<QueryAllOrderResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -583,6 +814,8 @@ export class QueryClientImpl implements Query {
     this.ItemAll = this.ItemAll.bind(this);
     this.Listing = this.Listing.bind(this);
     this.ListingAll = this.ListingAll.bind(this);
+    this.Order = this.Order.bind(this);
+    this.OrderAll = this.OrderAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -612,6 +845,18 @@ export class QueryClientImpl implements Query {
     const data = QueryAllListingRequest.encode(request).finish();
     const promise = this.rpc.request("crowlabs.eta.market.Query", "ListingAll", data);
     return promise.then((data) => QueryAllListingResponse.decode(new _m0.Reader(data)));
+  }
+
+  Order(request: QueryGetOrderRequest): Promise<QueryGetOrderResponse> {
+    const data = QueryGetOrderRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.market.Query", "Order", data);
+    return promise.then((data) => QueryGetOrderResponse.decode(new _m0.Reader(data)));
+  }
+
+  OrderAll(request: QueryAllOrderRequest): Promise<QueryAllOrderResponse> {
+    const data = QueryAllOrderRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.market.Query", "OrderAll", data);
+    return promise.then((data) => QueryAllOrderResponse.decode(new _m0.Reader(data)));
   }
 }
 

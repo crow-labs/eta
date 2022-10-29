@@ -6,6 +6,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "eta/market/params.proto";
 import "eta/market/item.proto";
 import "eta/market/listing.proto";
+import "eta/market/order.proto";
 // this line is used by starport scaffolding # 1
 import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
@@ -36,6 +37,16 @@ service Query {
 	// Queries a list of Listing items.
 	rpc ListingAll(QueryAllListingRequest) returns (QueryAllListingResponse) {
 		option (google.api.http).get = "/crow-labs/eta/market/listing";
+	}
+
+// Queries a Order by index.
+	rpc Order(QueryGetOrderRequest) returns (QueryGetOrderResponse) {
+		option (google.api.http).get = "/crow-labs/eta/market/order/{orderId}";
+	}
+
+	// Queries a list of Order items.
+	rpc OrderAll(QueryAllOrderRequest) returns (QueryAllOrderResponse) {
+		option (google.api.http).get = "/crow-labs/eta/market/order";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -83,6 +94,24 @@ message QueryAllListingRequest {
 
 message QueryAllListingResponse {
 	repeated Listing listing = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetOrderRequest {
+	  uint64 orderId = 1;
+
+}
+
+message QueryGetOrderResponse {
+	Order order = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllOrderRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllOrderResponse {
+	repeated Order order = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
