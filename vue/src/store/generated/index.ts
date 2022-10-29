@@ -1,8 +1,10 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import CrowlabsEtaWhitelist from './crowlabs.eta.whitelist'
 
 
 export default { 
+  CrowlabsEtaWhitelist: load(CrowlabsEtaWhitelist, 'crowlabs.eta.whitelist'),
   
 }
 
