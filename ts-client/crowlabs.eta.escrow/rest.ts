@@ -295,7 +295,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title eta/escrow/crow.proto
+ * @title eta/escrow/buyer_evidence.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

@@ -1,10 +1,11 @@
 import { Client, registry, MissingWalletError } from 'crow-labs-eta-client-ts'
 
+import { BuyerEvidence } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
 import { Crow } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
 import { Params } from "crow-labs-eta-client-ts/crowlabs.eta.escrow/types"
 
 
-export { Crow, Params };
+export { BuyerEvidence, Crow, Params };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -40,6 +41,7 @@ const getDefaultState = () => {
 				CrowAll: {},
 				
 				_Structure: {
+						BuyerEvidence: getStructure(BuyerEvidence.fromPartial({})),
 						Crow: getStructure(Crow.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
