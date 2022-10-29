@@ -12,10 +12,11 @@ export interface Item {
   condition: string;
   location: string;
   creatorId: number;
+  ownerId: number;
 }
 
 function createBaseItem(): Item {
-  return { itemId: 0, imageURL: [], name: "", description: "", condition: "", location: "", creatorId: 0 };
+  return { itemId: 0, imageURL: [], name: "", description: "", condition: "", location: "", creatorId: 0, ownerId: 0 };
 }
 
 export const Item = {
@@ -40,6 +41,9 @@ export const Item = {
     }
     if (message.creatorId !== 0) {
       writer.uint32(56).uint64(message.creatorId);
+    }
+    if (message.ownerId !== 0) {
+      writer.uint32(64).uint64(message.ownerId);
     }
     return writer;
   },
@@ -72,6 +76,9 @@ export const Item = {
         case 7:
           message.creatorId = longToNumber(reader.uint64() as Long);
           break;
+        case 8:
+          message.ownerId = longToNumber(reader.uint64() as Long);
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -89,6 +96,7 @@ export const Item = {
       condition: isSet(object.condition) ? String(object.condition) : "",
       location: isSet(object.location) ? String(object.location) : "",
       creatorId: isSet(object.creatorId) ? Number(object.creatorId) : 0,
+      ownerId: isSet(object.ownerId) ? Number(object.ownerId) : 0,
     };
   },
 
@@ -105,6 +113,7 @@ export const Item = {
     message.condition !== undefined && (obj.condition = message.condition);
     message.location !== undefined && (obj.location = message.location);
     message.creatorId !== undefined && (obj.creatorId = Math.round(message.creatorId));
+    message.ownerId !== undefined && (obj.ownerId = Math.round(message.ownerId));
     return obj;
   },
 
@@ -117,6 +126,7 @@ export const Item = {
     message.condition = object.condition ?? "";
     message.location = object.location ?? "";
     message.creatorId = object.creatorId ?? 0;
+    message.ownerId = object.ownerId ?? 0;
     return message;
   },
 };

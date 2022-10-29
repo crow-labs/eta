@@ -1,0 +1,19 @@
+syntax = "proto3";
+package crowlabs.eta.escrow;
+
+option go_package = "github.com/crow-labs/eta/x/escrow/types";
+import "gogoproto/gogo.proto"; 
+import "cosmos/base/v1beta1/coin.proto"; 
+
+message Crow {
+  uint64 crowId = 1; 
+  uint64 listingId = 2; 
+  uint64 orderId = 3; 
+  cosmos.base.v1beta1.Coin sellerCollateral = 4 [(gogoproto.nullable) = false]; 
+  cosmos.base.v1beta1.Coin buyerCollateral = 5 [(gogoproto.nullable) = false]; 
+  cosmos.base.v1beta1.Coin payment = 6 [(gogoproto.nullable) = false]; 
+  uint64 itemId = 7; 
+  repeated uint64 disputeIds = 8; 
+  
+}
+

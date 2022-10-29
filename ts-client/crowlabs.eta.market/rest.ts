@@ -20,6 +20,9 @@ export interface MarketItem {
 
   /** @format uint64 */
   creatorId?: string;
+
+  /** @format uint64 */
+  ownerId?: string;
 }
 
 export interface MarketListing {
