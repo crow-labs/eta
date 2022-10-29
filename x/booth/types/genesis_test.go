@@ -30,6 +30,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						VoteId: 1,
 					},
 				},
+				PunishmentVoteList: []types.PunishmentVote{
+					{
+						VoteId: 0,
+					},
+					{
+						VoteId: 1,
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -38,6 +46,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated guiltyVote",
 			genState: &types.GenesisState{
 				GuiltyVoteList: []types.GuiltyVote{
+					{
+						VoteId: 0,
+					},
+					{
+						VoteId: 0,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated punishmentVote",
+			genState: &types.GenesisState{
+				PunishmentVoteList: []types.PunishmentVote{
 					{
 						VoteId: 0,
 					},

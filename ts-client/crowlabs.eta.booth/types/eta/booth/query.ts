@@ -4,6 +4,7 @@ import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { GuiltyVote } from "./guilty_vote";
 import { Params } from "./params";
+import { PunishmentVote } from "./punishment_vote";
 
 export const protobufPackage = "crowlabs.eta.booth";
 
@@ -31,6 +32,23 @@ export interface QueryAllGuiltyVoteRequest {
 
 export interface QueryAllGuiltyVoteResponse {
   guiltyVote: GuiltyVote[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetPunishmentVoteRequest {
+  voteId: number;
+}
+
+export interface QueryGetPunishmentVoteResponse {
+  punishmentVote: PunishmentVote | undefined;
+}
+
+export interface QueryAllPunishmentVoteRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllPunishmentVoteResponse {
+  punishmentVote: PunishmentVote[];
   pagination: PageResponse | undefined;
 }
 
@@ -334,6 +352,230 @@ export const QueryAllGuiltyVoteResponse = {
   },
 };
 
+function createBaseQueryGetPunishmentVoteRequest(): QueryGetPunishmentVoteRequest {
+  return { voteId: 0 };
+}
+
+export const QueryGetPunishmentVoteRequest = {
+  encode(message: QueryGetPunishmentVoteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.voteId !== 0) {
+      writer.uint32(8).uint64(message.voteId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetPunishmentVoteRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetPunishmentVoteRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.voteId = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetPunishmentVoteRequest {
+    return { voteId: isSet(object.voteId) ? Number(object.voteId) : 0 };
+  },
+
+  toJSON(message: QueryGetPunishmentVoteRequest): unknown {
+    const obj: any = {};
+    message.voteId !== undefined && (obj.voteId = Math.round(message.voteId));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetPunishmentVoteRequest>, I>>(
+    object: I,
+  ): QueryGetPunishmentVoteRequest {
+    const message = createBaseQueryGetPunishmentVoteRequest();
+    message.voteId = object.voteId ?? 0;
+    return message;
+  },
+};
+
+function createBaseQueryGetPunishmentVoteResponse(): QueryGetPunishmentVoteResponse {
+  return { punishmentVote: undefined };
+}
+
+export const QueryGetPunishmentVoteResponse = {
+  encode(message: QueryGetPunishmentVoteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.punishmentVote !== undefined) {
+      PunishmentVote.encode(message.punishmentVote, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetPunishmentVoteResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetPunishmentVoteResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.punishmentVote = PunishmentVote.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetPunishmentVoteResponse {
+    return {
+      punishmentVote: isSet(object.punishmentVote) ? PunishmentVote.fromJSON(object.punishmentVote) : undefined,
+    };
+  },
+
+  toJSON(message: QueryGetPunishmentVoteResponse): unknown {
+    const obj: any = {};
+    message.punishmentVote !== undefined
+      && (obj.punishmentVote = message.punishmentVote ? PunishmentVote.toJSON(message.punishmentVote) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetPunishmentVoteResponse>, I>>(
+    object: I,
+  ): QueryGetPunishmentVoteResponse {
+    const message = createBaseQueryGetPunishmentVoteResponse();
+    message.punishmentVote = (object.punishmentVote !== undefined && object.punishmentVote !== null)
+      ? PunishmentVote.fromPartial(object.punishmentVote)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllPunishmentVoteRequest(): QueryAllPunishmentVoteRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllPunishmentVoteRequest = {
+  encode(message: QueryAllPunishmentVoteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllPunishmentVoteRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllPunishmentVoteRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllPunishmentVoteRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllPunishmentVoteRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllPunishmentVoteRequest>, I>>(
+    object: I,
+  ): QueryAllPunishmentVoteRequest {
+    const message = createBaseQueryAllPunishmentVoteRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllPunishmentVoteResponse(): QueryAllPunishmentVoteResponse {
+  return { punishmentVote: [], pagination: undefined };
+}
+
+export const QueryAllPunishmentVoteResponse = {
+  encode(message: QueryAllPunishmentVoteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.punishmentVote) {
+      PunishmentVote.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllPunishmentVoteResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllPunishmentVoteResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.punishmentVote.push(PunishmentVote.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllPunishmentVoteResponse {
+    return {
+      punishmentVote: Array.isArray(object?.punishmentVote)
+        ? object.punishmentVote.map((e: any) => PunishmentVote.fromJSON(e))
+        : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllPunishmentVoteResponse): unknown {
+    const obj: any = {};
+    if (message.punishmentVote) {
+      obj.punishmentVote = message.punishmentVote.map((e) => e ? PunishmentVote.toJSON(e) : undefined);
+    } else {
+      obj.punishmentVote = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllPunishmentVoteResponse>, I>>(
+    object: I,
+  ): QueryAllPunishmentVoteResponse {
+    const message = createBaseQueryAllPunishmentVoteResponse();
+    message.punishmentVote = object.punishmentVote?.map((e) => PunishmentVote.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -342,6 +584,10 @@ export interface Query {
   GuiltyVote(request: QueryGetGuiltyVoteRequest): Promise<QueryGetGuiltyVoteResponse>;
   /** Queries a list of GuiltyVote items. */
   GuiltyVoteAll(request: QueryAllGuiltyVoteRequest): Promise<QueryAllGuiltyVoteResponse>;
+  /** Queries a PunishmentVote by index. */
+  PunishmentVote(request: QueryGetPunishmentVoteRequest): Promise<QueryGetPunishmentVoteResponse>;
+  /** Queries a list of PunishmentVote items. */
+  PunishmentVoteAll(request: QueryAllPunishmentVoteRequest): Promise<QueryAllPunishmentVoteResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -351,6 +597,8 @@ export class QueryClientImpl implements Query {
     this.Params = this.Params.bind(this);
     this.GuiltyVote = this.GuiltyVote.bind(this);
     this.GuiltyVoteAll = this.GuiltyVoteAll.bind(this);
+    this.PunishmentVote = this.PunishmentVote.bind(this);
+    this.PunishmentVoteAll = this.PunishmentVoteAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -368,6 +616,18 @@ export class QueryClientImpl implements Query {
     const data = QueryAllGuiltyVoteRequest.encode(request).finish();
     const promise = this.rpc.request("crowlabs.eta.booth.Query", "GuiltyVoteAll", data);
     return promise.then((data) => QueryAllGuiltyVoteResponse.decode(new _m0.Reader(data)));
+  }
+
+  PunishmentVote(request: QueryGetPunishmentVoteRequest): Promise<QueryGetPunishmentVoteResponse> {
+    const data = QueryGetPunishmentVoteRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.booth.Query", "PunishmentVote", data);
+    return promise.then((data) => QueryGetPunishmentVoteResponse.decode(new _m0.Reader(data)));
+  }
+
+  PunishmentVoteAll(request: QueryAllPunishmentVoteRequest): Promise<QueryAllPunishmentVoteResponse> {
+    const data = QueryAllPunishmentVoteRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.booth.Query", "PunishmentVoteAll", data);
+    return promise.then((data) => QueryAllPunishmentVoteResponse.decode(new _m0.Reader(data)));
   }
 }
 

@@ -27,6 +27,29 @@ export interface BoothGuiltyVote {
  */
 export type BoothParams = object;
 
+export interface BoothPunishmentVote {
+  /** @format uint64 */
+  voteId?: string;
+
+  /** @format uint64 */
+  pollId?: string;
+
+  /** @format uint64 */
+  voterId?: string;
+
+  /** @format uint64 */
+  jailTime?: string;
+  blacklist?: boolean;
+
+  /**
+   * Coin defines a token with a denomination and an amount.
+   *
+   * NOTE: The amount field is an Int which implements the custom method
+   * signatures required by gogoproto.
+   */
+  refundAmount?: V1Beta1Coin;
+}
+
 export interface BoothQueryAllGuiltyVoteResponse {
   guiltyVote?: BoothGuiltyVote[];
 
@@ -42,8 +65,27 @@ export interface BoothQueryAllGuiltyVoteResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface BoothQueryAllPunishmentVoteResponse {
+  punishmentVote?: BoothPunishmentVote[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface BoothQueryGetGuiltyVoteResponse {
   guiltyVote?: BoothGuiltyVote;
+}
+
+export interface BoothQueryGetPunishmentVoteResponse {
+  punishmentVote?: BoothPunishmentVote;
 }
 
 /**
@@ -63,6 +105,17 @@ export interface RpcStatus {
   code?: number;
   message?: string;
   details?: ProtobufAny[];
+}
+
+/**
+* Coin defines a token with a denomination and an amount.
+
+NOTE: The amount field is an Int which implements the custom method
+signatures required by gogoproto.
+*/
+export interface V1Beta1Coin {
+  denom?: string;
+  amount?: string;
 }
 
 /**
@@ -315,6 +368,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<BoothQueryParamsResponse, RpcStatus>({
       path: `/crow-labs/eta/booth/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPunishmentVoteAll
+   * @summary Queries a list of PunishmentVote items.
+   * @request GET:/crow-labs/eta/booth/punishment_vote
+   */
+  queryPunishmentVoteAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<BoothQueryAllPunishmentVoteResponse, RpcStatus>({
+      path: `/crow-labs/eta/booth/punishment_vote`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPunishmentVote
+   * @summary Queries a PunishmentVote by index.
+   * @request GET:/crow-labs/eta/booth/punishment_vote/{voteId}
+   */
+  queryPunishmentVote = (voteId: string, params: RequestParams = {}) =>
+    this.request<BoothQueryGetPunishmentVoteResponse, RpcStatus>({
+      path: `/crow-labs/eta/booth/punishment_vote/${voteId}`,
       method: "GET",
       format: "json",
       ...params,

@@ -2,9 +2,10 @@ import { Client, registry, MissingWalletError } from 'crow-labs-eta-client-ts'
 
 import { GuiltyVote } from "crow-labs-eta-client-ts/crowlabs.eta.booth/types"
 import { Params } from "crow-labs-eta-client-ts/crowlabs.eta.booth/types"
+import { PunishmentVote } from "crow-labs-eta-client-ts/crowlabs.eta.booth/types"
 
 
-export { GuiltyVote, Params };
+export { GuiltyVote, Params, PunishmentVote };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -38,10 +39,13 @@ const getDefaultState = () => {
 				Params: {},
 				GuiltyVote: {},
 				GuiltyVoteAll: {},
+				PunishmentVote: {},
+				PunishmentVoteAll: {},
 				
 				_Structure: {
 						GuiltyVote: getStructure(GuiltyVote.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						PunishmentVote: getStructure(PunishmentVote.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -87,6 +91,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.GuiltyVoteAll[JSON.stringify(params)] ?? {}
+		},
+				getPunishmentVote: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.PunishmentVote[JSON.stringify(params)] ?? {}
+		},
+				getPunishmentVoteAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.PunishmentVoteAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -187,6 +203,54 @@ export default {
 				return getters['getGuiltyVoteAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryGuiltyVoteAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryPunishmentVote({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaBooth.query.queryPunishmentVote( key.voteId)).data
+				
+					
+				commit('QUERY', { query: 'PunishmentVote', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryPunishmentVote', payload: { options: { all }, params: {...key},query }})
+				return getters['getPunishmentVote']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryPunishmentVote API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryPunishmentVoteAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaBooth.query.queryPunishmentVoteAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.CrowlabsEtaBooth.query.queryPunishmentVoteAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'PunishmentVoteAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryPunishmentVoteAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getPunishmentVoteAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryPunishmentVoteAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

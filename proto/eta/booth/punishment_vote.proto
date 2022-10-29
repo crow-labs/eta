@@ -1,0 +1,17 @@
+syntax = "proto3";
+package crowlabs.eta.booth;
+
+option go_package = "github.com/crow-labs/eta/x/booth/types";
+import "gogoproto/gogo.proto"; 
+import "cosmos/base/v1beta1/coin.proto"; 
+
+message PunishmentVote {
+  uint64 voteId = 1; 
+  uint64 pollId = 2; 
+  uint64 voterId = 3; 
+  uint64 jailTime = 4; 
+  bool blacklist = 5; 
+  cosmos.base.v1beta1.Coin refundAmount = 6 [(gogoproto.nullable) = false]; 
+  
+}
+

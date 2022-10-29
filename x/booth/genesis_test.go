@@ -22,6 +22,14 @@ func TestGenesis(t *testing.T) {
 				VoteId: 1,
 			},
 		},
+		PunishmentVoteList: []types.PunishmentVote{
+			{
+				VoteId: 0,
+			},
+			{
+				VoteId: 1,
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -34,5 +42,6 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.GuiltyVoteList, got.GuiltyVoteList)
+	require.ElementsMatch(t, genesisState.PunishmentVoteList, got.PunishmentVoteList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -10,7 +10,8 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		GuiltyVoteList: []GuiltyVote{},
+		GuiltyVoteList:     []GuiltyVote{},
+		PunishmentVoteList: []PunishmentVote{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -28,6 +29,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for guiltyVote")
 		}
 		guiltyVoteIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in punishmentVote
+	punishmentVoteIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.PunishmentVoteList {
+		index := string(PunishmentVoteKey(elem.VoteId))
+		if _, ok := punishmentVoteIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for punishmentVote")
+		}
+		punishmentVoteIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

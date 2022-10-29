@@ -1,0 +1,63 @@
+package keeper_test
+
+import (
+	"strconv"
+	"testing"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	keepertest "github.com/crow-labs/eta/testutil/keeper"
+	"github.com/crow-labs/eta/testutil/nullify"
+	"github.com/crow-labs/eta/x/booth/keeper"
+	"github.com/crow-labs/eta/x/booth/types"
+	"github.com/stretchr/testify/require"
+)
+
+// Prevent strconv unused error
+var _ = strconv.IntSize
+
+func createNPunishmentVote(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.PunishmentVote {
+	items := make([]types.PunishmentVote, n)
+	for i := range items {
+		items[i].VoteId = uint64(i)
+
+		keeper.SetPunishmentVote(ctx, items[i])
+	}
+	return items
+}
+
+func TestPunishmentVoteGet(t *testing.T) {
+	keeper, ctx := keepertest.BoothKeeper(t)
+	items := createNPunishmentVote(keeper, ctx, 10)
+	for _, item := range items {
+		rst, found := keeper.GetPunishmentVote(ctx,
+			item.VoteId,
+		)
+		require.True(t, found)
+		require.Equal(t,
+			nullify.Fill(&item),
+			nullify.Fill(&rst),
+		)
+	}
+}
+func TestPunishmentVoteRemove(t *testing.T) {
+	keeper, ctx := keepertest.BoothKeeper(t)
+	items := createNPunishmentVote(keeper, ctx, 10)
+	for _, item := range items {
+		keeper.RemovePunishmentVote(ctx,
+			item.VoteId,
+		)
+		_, found := keeper.GetPunishmentVote(ctx,
+			item.VoteId,
+		)
+		require.False(t, found)
+	}
+}
+
+func TestPunishmentVoteGetAll(t *testing.T) {
+	keeper, ctx := keepertest.BoothKeeper(t)
+	items := createNPunishmentVote(keeper, ctx, 10)
+	require.ElementsMatch(t,
+		nullify.Fill(items),
+		nullify.Fill(keeper.GetAllPunishmentVote(ctx)),
+	)
+}

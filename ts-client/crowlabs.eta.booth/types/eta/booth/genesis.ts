@@ -2,20 +2,20 @@
 import _m0 from "protobufjs/minimal";
 import { GuiltyVote } from "./guilty_vote";
 import { Params } from "./params";
+import { PunishmentVote } from "./punishment_vote";
 
 export const protobufPackage = "crowlabs.eta.booth";
 
 /** GenesisState defines the booth module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   guiltyVoteList: GuiltyVote[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  punishmentVoteList: PunishmentVote[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, guiltyVoteList: [] };
+  return { params: undefined, guiltyVoteList: [], punishmentVoteList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +25,9 @@ export const GenesisState = {
     }
     for (const v of message.guiltyVoteList) {
       GuiltyVote.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.punishmentVoteList) {
+      PunishmentVote.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +45,9 @@ export const GenesisState = {
         case 2:
           message.guiltyVoteList.push(GuiltyVote.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.punishmentVoteList.push(PunishmentVote.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -56,6 +62,9 @@ export const GenesisState = {
       guiltyVoteList: Array.isArray(object?.guiltyVoteList)
         ? object.guiltyVoteList.map((e: any) => GuiltyVote.fromJSON(e))
         : [],
+      punishmentVoteList: Array.isArray(object?.punishmentVoteList)
+        ? object.punishmentVoteList.map((e: any) => PunishmentVote.fromJSON(e))
+        : [],
     };
   },
 
@@ -67,6 +76,11 @@ export const GenesisState = {
     } else {
       obj.guiltyVoteList = [];
     }
+    if (message.punishmentVoteList) {
+      obj.punishmentVoteList = message.punishmentVoteList.map((e) => e ? PunishmentVote.toJSON(e) : undefined);
+    } else {
+      obj.punishmentVoteList = [];
+    }
     return obj;
   },
 
@@ -76,6 +90,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.guiltyVoteList = object.guiltyVoteList?.map((e) => GuiltyVote.fromPartial(e)) || [];
+    message.punishmentVoteList = object.punishmentVoteList?.map((e) => PunishmentVote.fromPartial(e)) || [];
     return message;
   },
 };
