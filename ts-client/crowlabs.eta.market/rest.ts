@@ -22,6 +22,40 @@ export interface MarketItem {
   creatorId?: string;
 }
 
+export interface MarketListing {
+  /** @format uint64 */
+  listingId?: string;
+
+  /** @format uint64 */
+  whitelistId?: string;
+
+  /** @format uint64 */
+  sellerId?: string;
+
+  /** @format uint64 */
+  itemId?: string;
+
+  /**
+   * Coin defines a token with a denomination and an amount.
+   *
+   * NOTE: The amount field is an Int which implements the custom method
+   * signatures required by gogoproto.
+   */
+  reqPrice?: V1Beta1Coin;
+
+  /**
+   * Coin defines a token with a denomination and an amount.
+   *
+   * NOTE: The amount field is an Int which implements the custom method
+   * signatures required by gogoproto.
+   */
+  reqCollateral?: V1Beta1Coin;
+  offers?: string[];
+
+  /** @format uint64 */
+  crowId?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */
@@ -42,8 +76,27 @@ export interface MarketQueryAllItemResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface MarketQueryAllListingResponse {
+  listing?: MarketListing[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface MarketQueryGetItemResponse {
   item?: MarketItem;
+}
+
+export interface MarketQueryGetListingResponse {
+  listing?: MarketListing;
 }
 
 /**
@@ -63,6 +116,17 @@ export interface RpcStatus {
   code?: number;
   message?: string;
   details?: ProtobufAny[];
+}
+
+/**
+* Coin defines a token with a denomination and an amount.
+
+NOTE: The amount field is an Int which implements the custom method
+signatures required by gogoproto.
+*/
+export interface V1Beta1Coin {
+  denom?: string;
+  amount?: string;
 }
 
 /**
@@ -299,6 +363,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryItem = (itemId: string, params: RequestParams = {}) =>
     this.request<MarketQueryGetItemResponse, RpcStatus>({
       path: `/crow-labs/eta/market/item/${itemId}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryListingAll
+   * @summary Queries a list of Listing items.
+   * @request GET:/crow-labs/eta/market/listing
+   */
+  queryListingAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MarketQueryAllListingResponse, RpcStatus>({
+      path: `/crow-labs/eta/market/listing`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryListing
+   * @summary Queries a Listing by index.
+   * @request GET:/crow-labs/eta/market/listing/{listingId}
+   */
+  queryListing = (listingId: string, params: RequestParams = {}) =>
+    this.request<MarketQueryGetListingResponse, RpcStatus>({
+      path: `/crow-labs/eta/market/listing/${listingId}`,
       method: "GET",
       format: "json",
       ...params,

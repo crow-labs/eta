@@ -3,6 +3,7 @@ import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { Item } from "./item";
+import { Listing } from "./listing";
 import { Params } from "./params";
 
 export const protobufPackage = "crowlabs.eta.market";
@@ -31,6 +32,23 @@ export interface QueryAllItemRequest {
 
 export interface QueryAllItemResponse {
   item: Item[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetListingRequest {
+  listingId: number;
+}
+
+export interface QueryGetListingResponse {
+  listing: Listing | undefined;
+}
+
+export interface QueryAllListingRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllListingResponse {
+  listing: Listing[];
   pagination: PageResponse | undefined;
 }
 
@@ -331,6 +349,217 @@ export const QueryAllItemResponse = {
   },
 };
 
+function createBaseQueryGetListingRequest(): QueryGetListingRequest {
+  return { listingId: 0 };
+}
+
+export const QueryGetListingRequest = {
+  encode(message: QueryGetListingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.listingId !== 0) {
+      writer.uint32(8).uint64(message.listingId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetListingRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetListingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.listingId = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetListingRequest {
+    return { listingId: isSet(object.listingId) ? Number(object.listingId) : 0 };
+  },
+
+  toJSON(message: QueryGetListingRequest): unknown {
+    const obj: any = {};
+    message.listingId !== undefined && (obj.listingId = Math.round(message.listingId));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetListingRequest>, I>>(object: I): QueryGetListingRequest {
+    const message = createBaseQueryGetListingRequest();
+    message.listingId = object.listingId ?? 0;
+    return message;
+  },
+};
+
+function createBaseQueryGetListingResponse(): QueryGetListingResponse {
+  return { listing: undefined };
+}
+
+export const QueryGetListingResponse = {
+  encode(message: QueryGetListingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.listing !== undefined) {
+      Listing.encode(message.listing, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetListingResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetListingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.listing = Listing.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetListingResponse {
+    return { listing: isSet(object.listing) ? Listing.fromJSON(object.listing) : undefined };
+  },
+
+  toJSON(message: QueryGetListingResponse): unknown {
+    const obj: any = {};
+    message.listing !== undefined && (obj.listing = message.listing ? Listing.toJSON(message.listing) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetListingResponse>, I>>(object: I): QueryGetListingResponse {
+    const message = createBaseQueryGetListingResponse();
+    message.listing = (object.listing !== undefined && object.listing !== null)
+      ? Listing.fromPartial(object.listing)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllListingRequest(): QueryAllListingRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllListingRequest = {
+  encode(message: QueryAllListingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllListingRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllListingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllListingRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllListingRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllListingRequest>, I>>(object: I): QueryAllListingRequest {
+    const message = createBaseQueryAllListingRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllListingResponse(): QueryAllListingResponse {
+  return { listing: [], pagination: undefined };
+}
+
+export const QueryAllListingResponse = {
+  encode(message: QueryAllListingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.listing) {
+      Listing.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllListingResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllListingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.listing.push(Listing.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllListingResponse {
+    return {
+      listing: Array.isArray(object?.listing) ? object.listing.map((e: any) => Listing.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllListingResponse): unknown {
+    const obj: any = {};
+    if (message.listing) {
+      obj.listing = message.listing.map((e) => e ? Listing.toJSON(e) : undefined);
+    } else {
+      obj.listing = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllListingResponse>, I>>(object: I): QueryAllListingResponse {
+    const message = createBaseQueryAllListingResponse();
+    message.listing = object.listing?.map((e) => Listing.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -339,6 +568,10 @@ export interface Query {
   Item(request: QueryGetItemRequest): Promise<QueryGetItemResponse>;
   /** Queries a list of Item items. */
   ItemAll(request: QueryAllItemRequest): Promise<QueryAllItemResponse>;
+  /** Queries a Listing by index. */
+  Listing(request: QueryGetListingRequest): Promise<QueryGetListingResponse>;
+  /** Queries a list of Listing items. */
+  ListingAll(request: QueryAllListingRequest): Promise<QueryAllListingResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -348,6 +581,8 @@ export class QueryClientImpl implements Query {
     this.Params = this.Params.bind(this);
     this.Item = this.Item.bind(this);
     this.ItemAll = this.ItemAll.bind(this);
+    this.Listing = this.Listing.bind(this);
+    this.ListingAll = this.ListingAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -365,6 +600,18 @@ export class QueryClientImpl implements Query {
     const data = QueryAllItemRequest.encode(request).finish();
     const promise = this.rpc.request("crowlabs.eta.market.Query", "ItemAll", data);
     return promise.then((data) => QueryAllItemResponse.decode(new _m0.Reader(data)));
+  }
+
+  Listing(request: QueryGetListingRequest): Promise<QueryGetListingResponse> {
+    const data = QueryGetListingRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.market.Query", "Listing", data);
+    return promise.then((data) => QueryGetListingResponse.decode(new _m0.Reader(data)));
+  }
+
+  ListingAll(request: QueryAllListingRequest): Promise<QueryAllListingResponse> {
+    const data = QueryAllListingRequest.encode(request).finish();
+    const promise = this.rpc.request("crowlabs.eta.market.Query", "ListingAll", data);
+    return promise.then((data) => QueryAllListingResponse.decode(new _m0.Reader(data)));
   }
 }
 

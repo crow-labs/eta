@@ -1,21 +1,21 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { Item } from "./item";
+import { Listing } from "./listing";
 import { Params } from "./params";
 
 export const protobufPackage = "crowlabs.eta.market";
 
 /** GenesisState defines the market module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   itemList: Item[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  listingList: Listing[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, itemList: [] };
+  return { params: undefined, itemList: [], listingList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +25,9 @@ export const GenesisState = {
     }
     for (const v of message.itemList) {
       Item.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.listingList) {
+      Listing.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +45,9 @@ export const GenesisState = {
         case 2:
           message.itemList.push(Item.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.listingList.push(Listing.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -54,6 +60,7 @@ export const GenesisState = {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
       itemList: Array.isArray(object?.itemList) ? object.itemList.map((e: any) => Item.fromJSON(e)) : [],
+      listingList: Array.isArray(object?.listingList) ? object.listingList.map((e: any) => Listing.fromJSON(e)) : [],
     };
   },
 
@@ -65,6 +72,11 @@ export const GenesisState = {
     } else {
       obj.itemList = [];
     }
+    if (message.listingList) {
+      obj.listingList = message.listingList.map((e) => e ? Listing.toJSON(e) : undefined);
+    } else {
+      obj.listingList = [];
+    }
     return obj;
   },
 
@@ -74,6 +86,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.itemList = object.itemList?.map((e) => Item.fromPartial(e)) || [];
+    message.listingList = object.listingList?.map((e) => Listing.fromPartial(e)) || [];
     return message;
   },
 };

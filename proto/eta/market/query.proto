@@ -1,12 +1,14 @@
 syntax = "proto3";
 package crowlabs.eta.market;
 
-import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "eta/market/params.proto";
 import "eta/market/item.proto";
+import "eta/market/listing.proto";
 // this line is used by starport scaffolding # 1
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
 
 option go_package = "github.com/crow-labs/eta/x/market/types";
 
@@ -24,6 +26,16 @@ service Query {
 	// Queries a list of Item items.
 	rpc ItemAll(QueryAllItemRequest) returns (QueryAllItemResponse) {
 		option (google.api.http).get = "/crow-labs/eta/market/item";
+	}
+
+// Queries a Listing by index.
+	rpc Listing(QueryGetListingRequest) returns (QueryGetListingResponse) {
+		option (google.api.http).get = "/crow-labs/eta/market/listing/{listingId}";
+	}
+
+	// Queries a list of Listing items.
+	rpc ListingAll(QueryAllListingRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/crow-labs/eta/market/listing";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -53,6 +65,24 @@ message QueryAllItemRequest {
 
 message QueryAllItemResponse {
 	repeated Item item = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetListingRequest {
+	  uint64 listingId = 1;
+
+}
+
+message QueryGetListingResponse {
+	Listing listing = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllListingRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllListingResponse {
+	repeated Listing listing = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

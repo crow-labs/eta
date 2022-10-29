@@ -1,0 +1,19 @@
+syntax = "proto3";
+package crowlabs.eta.market;
+
+option go_package = "github.com/crow-labs/eta/x/market/types";
+import "gogoproto/gogo.proto"; 
+import "cosmos/base/v1beta1/coin.proto"; 
+
+message Listing {
+  uint64 listingId = 1; 
+  uint64 whitelistId = 2; 
+  uint64 sellerId = 3; 
+  uint64 itemId = 4; 
+  cosmos.base.v1beta1.Coin reqPrice = 5 [(gogoproto.nullable) = false]; 
+  cosmos.base.v1beta1.Coin reqCollateral = 6 [(gogoproto.nullable) = false]; 
+  repeated uint64 offers = 7; 
+  uint64 crowId = 8; 
+  
+}
+
