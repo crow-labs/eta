@@ -11,6 +11,6 @@ message Item {
   string condition = 5; 
   string location = 6; 
   uint64 creatorId = 7; 
-  
+  uint64 ownerId = 8;
 }
 
