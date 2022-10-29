@@ -1,0 +1,17 @@
+syntax = "proto3";
+package crowlabs.eta.whitelist;
+
+option go_package = "github.com/crow-labs/eta/x/whitelist/types";
+
+message Member {
+  string addresss = 1; 
+  uint64 memberId = 2; 
+  string status = 3; 
+  repeated uint64 orders = 4; 
+  repeated uint64 listings = 5; 
+  repeated uint64 disputes = 6; 
+  repeated uint64 crows = 7; 
+  repeated uint64 votes = 8; 
+  
+}
+
