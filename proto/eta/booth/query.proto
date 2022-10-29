@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "eta/booth/params.proto";
+import "eta/booth/guilty_vote.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/crow-labs/eta/x/booth/types";
@@ -15,7 +16,17 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/crow-labs/eta/booth/params";
   }
-  // this line is used by starport scaffolding # 2
+  // Queries a GuiltyVote by index.
+	rpc GuiltyVote(QueryGetGuiltyVoteRequest) returns (QueryGetGuiltyVoteResponse) {
+		option (google.api.http).get = "/crow-labs/eta/booth/guilty_vote/{voteId}";
+	}
+
+	// Queries a list of GuiltyVote items.
+	rpc GuiltyVoteAll(QueryAllGuiltyVoteRequest) returns (QueryAllGuiltyVoteResponse) {
+		option (google.api.http).get = "/crow-labs/eta/booth/guilty_vote";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,6 +36,24 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetGuiltyVoteRequest {
+	  uint64 voteId = 1;
+
+}
+
+message QueryGetGuiltyVoteResponse {
+	GuiltyVote guiltyVote = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllGuiltyVoteRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllGuiltyVoteResponse {
+	repeated GuiltyVote guiltyVote = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3
