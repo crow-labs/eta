@@ -27,6 +27,26 @@ export interface BoothGuiltyVote {
  */
 export type BoothParams = object;
 
+export interface BoothPoll {
+  /** @format uint64 */
+  pollId?: string;
+
+  /**
+   * Coin defines a token with a denomination and an amount.
+   *
+   * NOTE: The amount field is an Int which implements the custom method
+   * signatures required by gogoproto.
+   */
+  funding?: V1Beta1Coin;
+
+  /** @format uint64 */
+  disputeId?: string;
+  guiltyVotes?: string[];
+  guiltVerdict?: string;
+  punishmentVotes?: string[];
+  punishmentVerdict?: string;
+}
+
 export interface BoothPunishmentVote {
   /** @format uint64 */
   voteId?: string;
@@ -65,6 +85,21 @@ export interface BoothQueryAllGuiltyVoteResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface BoothQueryAllPollResponse {
+  poll?: BoothPoll[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface BoothQueryAllPunishmentVoteResponse {
   punishmentVote?: BoothPunishmentVote[];
 
@@ -82,6 +117,10 @@ export interface BoothQueryAllPunishmentVoteResponse {
 
 export interface BoothQueryGetGuiltyVoteResponse {
   guiltyVote?: BoothGuiltyVote;
+}
+
+export interface BoothQueryGetPollResponse {
+  poll?: BoothPoll;
 }
 
 export interface BoothQueryGetPunishmentVoteResponse {
@@ -368,6 +407,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<BoothQueryParamsResponse, RpcStatus>({
       path: `/crow-labs/eta/booth/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPollAll
+   * @summary Queries a list of Poll items.
+   * @request GET:/crow-labs/eta/booth/poll
+   */
+  queryPollAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<BoothQueryAllPollResponse, RpcStatus>({
+      path: `/crow-labs/eta/booth/poll`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryPoll
+   * @summary Queries a Poll by index.
+   * @request GET:/crow-labs/eta/booth/poll/{pollId}
+   */
+  queryPoll = (pollId: string, params: RequestParams = {}) =>
+    this.request<BoothQueryGetPollResponse, RpcStatus>({
+      path: `/crow-labs/eta/booth/poll/${pollId}`,
       method: "GET",
       format: "json",
       ...params,

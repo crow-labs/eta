@@ -12,6 +12,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		GuiltyVoteList:     []GuiltyVote{},
 		PunishmentVoteList: []PunishmentVote{},
+		PollList:           []Poll{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -39,6 +40,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for punishmentVote")
 		}
 		punishmentVoteIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in poll
+	pollIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.PollList {
+		index := string(PollKey(elem.PollId))
+		if _, ok := pollIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for poll")
+		}
+		pollIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

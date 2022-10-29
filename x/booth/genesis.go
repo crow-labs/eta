@@ -16,6 +16,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.PunishmentVoteList {
 		k.SetPunishmentVote(ctx, elem)
 	}
+	// Set all the poll
+	for _, elem := range genState.PollList {
+		k.SetPoll(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -27,6 +31,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	genesis.GuiltyVoteList = k.GetAllGuiltyVote(ctx)
 	genesis.PunishmentVoteList = k.GetAllPunishmentVote(ctx)
+	genesis.PollList = k.GetAllPoll(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

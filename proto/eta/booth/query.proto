@@ -6,6 +6,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "eta/booth/params.proto";
 import "eta/booth/guilty_vote.proto";
 import "eta/booth/punishment_vote.proto";
+import "eta/booth/poll.proto";
 // this line is used by starport scaffolding # 1
 import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
@@ -36,6 +37,16 @@ service Query {
 	// Queries a list of PunishmentVote items.
 	rpc PunishmentVoteAll(QueryAllPunishmentVoteRequest) returns (QueryAllPunishmentVoteResponse) {
 		option (google.api.http).get = "/crow-labs/eta/booth/punishment_vote";
+	}
+
+// Queries a Poll by index.
+	rpc Poll(QueryGetPollRequest) returns (QueryGetPollResponse) {
+		option (google.api.http).get = "/crow-labs/eta/booth/poll/{pollId}";
+	}
+
+	// Queries a list of Poll items.
+	rpc PollAll(QueryAllPollRequest) returns (QueryAllPollResponse) {
+		option (google.api.http).get = "/crow-labs/eta/booth/poll";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -83,6 +94,24 @@ message QueryAllPunishmentVoteRequest {
 
 message QueryAllPunishmentVoteResponse {
 	repeated PunishmentVote punishmentVote = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetPollRequest {
+	  uint64 pollId = 1;
+
+}
+
+message QueryGetPollResponse {
+	Poll poll = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllPollRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPollResponse {
+	repeated Poll poll = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

@@ -2,10 +2,11 @@ import { Client, registry, MissingWalletError } from 'crow-labs-eta-client-ts'
 
 import { GuiltyVote } from "crow-labs-eta-client-ts/crowlabs.eta.booth/types"
 import { Params } from "crow-labs-eta-client-ts/crowlabs.eta.booth/types"
+import { Poll } from "crow-labs-eta-client-ts/crowlabs.eta.booth/types"
 import { PunishmentVote } from "crow-labs-eta-client-ts/crowlabs.eta.booth/types"
 
 
-export { GuiltyVote, Params, PunishmentVote };
+export { GuiltyVote, Params, Poll, PunishmentVote };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -41,10 +42,13 @@ const getDefaultState = () => {
 				GuiltyVoteAll: {},
 				PunishmentVote: {},
 				PunishmentVoteAll: {},
+				Poll: {},
+				PollAll: {},
 				
 				_Structure: {
 						GuiltyVote: getStructure(GuiltyVote.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						Poll: getStructure(Poll.fromPartial({})),
 						PunishmentVote: getStructure(PunishmentVote.fromPartial({})),
 						
 		},
@@ -103,6 +107,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.PunishmentVoteAll[JSON.stringify(params)] ?? {}
+		},
+				getPoll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Poll[JSON.stringify(params)] ?? {}
+		},
+				getPollAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.PollAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -251,6 +267,54 @@ export default {
 				return getters['getPunishmentVoteAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryPunishmentVoteAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryPoll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaBooth.query.queryPoll( key.pollId)).data
+				
+					
+				commit('QUERY', { query: 'Poll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryPoll', payload: { options: { all }, params: {...key},query }})
+				return getters['getPoll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryPoll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryPollAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.CrowlabsEtaBooth.query.queryPollAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.CrowlabsEtaBooth.query.queryPollAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'PollAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryPollAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getPollAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryPollAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

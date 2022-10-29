@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "eta/booth/params.proto";
 import "eta/booth/guilty_vote.proto";
 import "eta/booth/punishment_vote.proto";
+import "eta/booth/poll.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/crow-labs/eta/x/booth/types";
@@ -14,5 +15,6 @@ message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   repeated GuiltyVote guiltyVoteList = 2 [(gogoproto.nullable) = false];
   repeated PunishmentVote punishmentVoteList = 3 [(gogoproto.nullable) = false];
+  repeated Poll pollList = 4 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

@@ -2,6 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { GuiltyVote } from "./guilty_vote";
 import { Params } from "./params";
+import { Poll } from "./poll";
 import { PunishmentVote } from "./punishment_vote";
 
 export const protobufPackage = "crowlabs.eta.booth";
@@ -10,12 +11,13 @@ export const protobufPackage = "crowlabs.eta.booth";
 export interface GenesisState {
   params: Params | undefined;
   guiltyVoteList: GuiltyVote[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   punishmentVoteList: PunishmentVote[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  pollList: Poll[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, guiltyVoteList: [], punishmentVoteList: [] };
+  return { params: undefined, guiltyVoteList: [], punishmentVoteList: [], pollList: [] };
 }
 
 export const GenesisState = {
@@ -28,6 +30,9 @@ export const GenesisState = {
     }
     for (const v of message.punishmentVoteList) {
       PunishmentVote.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.pollList) {
+      Poll.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -48,6 +53,9 @@ export const GenesisState = {
         case 3:
           message.punishmentVoteList.push(PunishmentVote.decode(reader, reader.uint32()));
           break;
+        case 4:
+          message.pollList.push(Poll.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -65,6 +73,7 @@ export const GenesisState = {
       punishmentVoteList: Array.isArray(object?.punishmentVoteList)
         ? object.punishmentVoteList.map((e: any) => PunishmentVote.fromJSON(e))
         : [],
+      pollList: Array.isArray(object?.pollList) ? object.pollList.map((e: any) => Poll.fromJSON(e)) : [],
     };
   },
 
@@ -81,6 +90,11 @@ export const GenesisState = {
     } else {
       obj.punishmentVoteList = [];
     }
+    if (message.pollList) {
+      obj.pollList = message.pollList.map((e) => e ? Poll.toJSON(e) : undefined);
+    } else {
+      obj.pollList = [];
+    }
     return obj;
   },
 
@@ -91,6 +105,7 @@ export const GenesisState = {
       : undefined;
     message.guiltyVoteList = object.guiltyVoteList?.map((e) => GuiltyVote.fromPartial(e)) || [];
     message.punishmentVoteList = object.punishmentVoteList?.map((e) => PunishmentVote.fromPartial(e)) || [];
+    message.pollList = object.pollList?.map((e) => Poll.fromPartial(e)) || [];
     return message;
   },
 };
