@@ -1,0 +1,16 @@
+syntax = "proto3";
+package crowlabs.eta.market;
+
+option go_package = "github.com/crow-labs/eta/x/market/types";
+
+message Item {
+  uint64 itemId = 1; 
+  repeated string imageURL = 2; 
+  string name = 3; 
+  string description = 4; 
+  string condition = 5; 
+  string location = 6; 
+  uint64 creatorId = 7; 
+  
+}
+
