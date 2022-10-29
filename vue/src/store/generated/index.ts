@@ -1,9 +1,11 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import CrowlabsEtaMarket from './crowlabs.eta.market'
 import CrowlabsEtaWhitelist from './crowlabs.eta.whitelist'
 
 
 export default { 
+  CrowlabsEtaMarket: load(CrowlabsEtaMarket, 'crowlabs.eta.market'),
   CrowlabsEtaWhitelist: load(CrowlabsEtaWhitelist, 'crowlabs.eta.whitelist'),
   
 }
